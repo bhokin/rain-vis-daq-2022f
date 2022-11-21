@@ -17,7 +17,7 @@
         body: JSON.stringify({
           query: `
             {
-              basin(basinId: 3) {
+              basins {
                 name
                 avgMonthlyRainfalls {
                   amount
@@ -29,15 +29,32 @@
       });
       var json = await resp.json();
       var table = json.data;
+      var basins = table.basins;
+      console.log(table.basins)
 
-      var data = [{
-        x: table.basin.avgMonthlyRainfalls.map(row => row.month),
-        y: table.basin.avgMonthlyRainfalls.map(row => row.amount),
-        type: 'line',
-        name: table.basin.name,
-      }];
+      data = basins.map((basin) => {
+        return {
+          x: basin.avgMonthlyRainfalls.map(row => row.month),
+          y: basin.avgMonthlyRainfalls.map(row => row.amount),
+          type: 'line',
+          name: basin.name,
+        }
+      })
+
+      console.log(data)
+      // for (i = 0; i < table.basins.length; i++) {
+      //   basins.push(
+      //     {
+      //       x: table[i].basin.avgMonthlyRainfalls.map(row => row.month),
+      //       y: table[i].basin.avgMonthlyRainfalls.map(row => row.amount),
+      //       type: 'line',
+      //       name: table[i].basin.name,
+      //     },
+      //   )
+      // }
+
       var layout = {
-        title: 'Average Monthly Rainfalls for Ping River Basin',
+        title: 'Average Monthly Rainfalls for All Basins',
         xaxis: {
           title: 'Month'
         },
